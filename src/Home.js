@@ -3,21 +3,50 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 export default function Home({ parentCallback }) {
-  const [mood, setMood] = useState(0);
-  const [weatherState, setWeatherState] = useState([]);
   const WEATHER_KEY = "a1c846e036fcd5fdcd38581b45498a49";
-  let weatherUrl =
-    "https://api.openweathermap.org/data/2.5/weather?lat=51&lon=22&appid=" +
-    WEATHER_KEY;
+  const [mood, setMood] = useState(0);
+  const [weatherState, setWeatherState] = useState({
+    weatherData: [],
+    weatherDataMain: [],
+  });
+
+  const [weatherUrl, setWeatherUrl] = useState(
+    "https://api.openweathermap.org/data/2.5/weather?lat=69&lon=69&appid=" +
+      WEATHER_KEY
+  );
+
+  function success(pos) {
+    let crd = pos.coords;
+
+    setWeatherUrl(
+      "https://api.openweathermap.org/data/2.5/weather?lat=" +
+        Math.floor(crd.latitude) +
+        "&lon=" +
+        Math.floor(crd.longitude) +
+        "&appid=" +
+        WEATHER_KEY
+    );
+  }
 
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(success);
+
     axios.get(weatherUrl).then(function (data) {
       const weatherResult = data.data;
+      const weatherResultMain = data.data.weather[0];
+
+      console.log(data.data);
+      console.log(data.data.weather[0]);
+
       setWeatherState(weatherResult);
-      console.log(weatherResult.weather[0].main);
-      console.log(weatherState.weather[0].main);
+      setWeatherState(() => {
+        return {
+          weatherData: weatherResult,
+          weatherDataMain: weatherResultMain,
+        };
+      });
     });
-  }, []);
+  }, [weatherUrl]);
 
   return (
     <div>
@@ -58,7 +87,7 @@ export default function Home({ parentCallback }) {
       </button>
 
       <h2>Weather in {weatherState.name} </h2>
-      <p></p>
+      <p>{}</p>
     </div>
   );
 }

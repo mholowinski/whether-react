@@ -5,7 +5,7 @@ import Movie from "./Movie/Movie.js";
 import MovieSmall from "./Movie/MovieSmall.js";
 import Home from "./Home";
 import axios from "axios";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import About from "./About";
 
 const App = () => {
@@ -58,7 +58,6 @@ const App = () => {
     }
   };
 
-  console.log(url);
   return (
     <Router>
       <div id="container">
