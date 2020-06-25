@@ -8,10 +8,11 @@ export default function Home({ parentCallback }) {
   const [weatherState, setWeatherState] = useState({
     weatherData: [],
     weatherDataMain: [],
+    weatherDataTemp: [],
   });
 
   const [weatherUrl, setWeatherUrl] = useState(
-    "https://api.openweathermap.org/data/2.5/weather?lat=69&lon=69&appid=" +
+    "https://api.openweathermap.org/data/2.5/weather?lat=40&lon=56&appid=" +
       WEATHER_KEY
   );
 
@@ -27,29 +28,38 @@ export default function Home({ parentCallback }) {
         WEATHER_KEY
     );
   }
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(success);
+  }, []);
 
+  useEffect(() => {
     axios.get(weatherUrl).then(function (data) {
       const weatherResult = data.data;
-      const weatherResultMain = data.data.weather[0];
 
-      console.log(data.data);
-      console.log(data.data.weather[0]);
-
-      setWeatherState(weatherResult);
       setWeatherState(() => {
         return {
           weatherData: weatherResult,
-          weatherDataMain: weatherResultMain,
+          weatherDataMain: weatherResult.weather[0],
+          weatherDataTemp: weatherResult.main,
         };
       });
     });
   }, [weatherUrl]);
+  console.log("XD");
+
+  // console.log(weatherState.weatherData);
+  // console.log(weatherState.weatherDataMain);
+  // console.log(weatherState.weatherDataTemp);
 
   return (
     <div>
+      <h2>Weather in {weatherState.weatherData.name} </h2>
+      <p> Type: {weatherState.weatherDataMain.main}</p>
+      <p>
+        Temperature:{" "}
+        {Math.floor(weatherState.weatherDataTemp.temp - 273) + " °C"}
+      </p>
+
       <h1>Pick somethin!</h1>
       <Link
         to="/result"
@@ -85,9 +95,6 @@ export default function Home({ parentCallback }) {
       >
         URL TYPE 4
       </button>
-
-      <h2>Weather in {weatherState.name} </h2>
-      <p>{}</p>
     </div>
   );
 }
