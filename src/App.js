@@ -34,29 +34,9 @@ const App = () => {
     });
   }, [url]);
 
-  const callback = (mood) => {
-    // set mood
-    switch (mood) {
-      case 1:
-        {
-          setUrl(
-            "https://api.themoviedb.org/3/discover/movie?api_key=" +
-              MOVIE_KEY +
-              "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=53"
-          );
-        }
-        break;
-      case 2: {
-        setUrl(
-          "https://api.themoviedb.org/3/discover/movie?api_key=" +
-            MOVIE_KEY +
-            "&language=en-US&sort_by=vote_average.desc&include_adult=false&include_video=false&page=1&with_genres=53"
-        );
-
-        console.log(url);
-        break;
-      }
-    }
+  const callback = (movieUrl) => {
+    setUrl(movieUrl);
+    console.log("callback " + movieUrl);
   };
 
   return (
